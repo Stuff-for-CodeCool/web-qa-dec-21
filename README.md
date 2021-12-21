@@ -1,0 +1,1 @@
+Example on how to send / receive data via JS to/from Flask
