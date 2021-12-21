@@ -2,6 +2,8 @@ from flask import Flask, render_template, jsonify, request
 from time import sleep
 from random import randint
 
+from database import run_query
+
 app = Flask(__name__)
 
 
@@ -49,5 +51,19 @@ def login():
 
     return render_template("index.html")
 
+
+@app.route("/got")
+def got():
+    show = run_query("""
+    select shows.title from shows
+    left join show_genres on show_genres.show_id = shows.id
+    left join genres on genres.id = show_genres.genre_id
+    where genres.name ilike %(genre)s
+    limit 20
+    ;""", {
+        "genre": "animation"
+    })
+    
+    return jsonify(show)
 
 app.run(debug=True)
